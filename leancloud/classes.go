@@ -1,9 +1,6 @@
 package leancloud
 
-import (
-	"errors"
-)
-
-func (l *LeanCloud) AddClass() error{
-	return errors.New("s")
+func (l *LeanCloud) AddClass(name string, data interface{}) {
+	r := l.post("classes/"+name, data)
+	fetch(r, l)
 }
