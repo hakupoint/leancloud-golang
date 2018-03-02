@@ -34,5 +34,6 @@ func (l *LeanCloud) request(m string) *http.Request{
 		r.Header.Add("X-LC-Sign", fmt.Sprintf("%s,%d,%s", l.Sign, l.timestamp, "master"))	
 	}
 	r.Header.Add("X-LC-Id", l.Id)
+	r.Header.Add("Content-Type", "application/json")
 	return r
 }
