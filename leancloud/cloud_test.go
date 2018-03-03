@@ -8,7 +8,7 @@ import (
 
 var objectId string
 
-var lean = NewLeanCould("i5MPgUcNCsxwYa8HUqIXw6lS-gzGzoHsz", "rve40O8hjeXTD6NOHhkab6hH", "Xf0W9nbE6dvBUk3S2OKkJdgW")
+var lean = NewLeanCould("-gzGzoHsz", "", "")
 
 func Test_NewLeancloud(t *testing.T) {
 	lean.SetSign(SIGN_MASTER_KEY)
@@ -59,13 +59,18 @@ func Test_DeleteClasses(t *testing.T) {
 	}
 }
 
-func Test_SearchClasses(t *testing.T) {
+func Test_ScanClass(t *testing.T) {
 	params := url.Values{}
 	params.Add("limit", "1000")
-	r, err := lean.SearchClass("test", params)
+	err := lean.ScanClass("test", params)
 	if err != nil {
 		fmt.Println(err)
 		t.Fail()
 	}
-	fmt.Printf("%+v", r)
+}
+
+func Test_BatchUpdate(t *testing.T) {
+	lean.BatchUpdate("test", "PUT", Body{
+		Content: "我是你妹妹",
+	})
 }

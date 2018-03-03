@@ -27,23 +27,29 @@ type LeanCloud struct {
 	isMaster              bool
 	sign_mode             int
 	timestamp             int64
+	ScanResponse          ScanResponse
 }
 
 func NewLeanCould(id, key, masterKey string) *LeanCloud {
 	API_URL = "https://" + id[0:7] + ".api.lncld.net/" + Version + "/"
-	return &LeanCloud{
+	lean := &LeanCloud{
 		mu:        &sync.Mutex{},
 		Id:        id,
 		Key:       key,
 		sign_mode: SIGN_APP_KEY,
 		Master:    masterKey,
 	}
+	defer func() {
+		lean.sign()
+	}()
+	return lean
 }
 
 // app key SIGN_APP_KEY
 // master SIGN_MASTER_KEY
 func (l *LeanCloud) SetSign(flag int) {
 	l.sign_mode = flag
+	l.sign()
 }
 
 func (l *LeanCloud) sign() {
