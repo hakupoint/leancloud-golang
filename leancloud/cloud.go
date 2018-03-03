@@ -56,7 +56,6 @@ func (l *LeanCloud) sign() {
 	if l.sign_mode == SIGN_MASTER_KEY {
 		key = l.Master
 	}
-	fmt.Print(now + key)
 	b := []byte(now + key)
 	l.Sign = fmt.Sprintf("%x", md5.Sum([]byte(b)))
 }
