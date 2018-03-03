@@ -8,7 +8,7 @@ import (
 
 var objectId string
 
-var lean = NewLeanCould("-gzGzoHsz", "", "")
+var lean = NewLeanCould("i5MPgUcNCsxwYa8HUqIXw6lS-gzGzoHsz", "rve40O8hjeXTD6NOHhkab6hH", "Xf0W9nbE6dvBUk3S2OKkJdgW")
 
 func Test_NewLeancloud(t *testing.T) {
 	lean.SetSign(SIGN_MASTER_KEY)
@@ -17,11 +17,10 @@ func Test_NewLeancloud(t *testing.T) {
 		fmt.Print(err)
 		t.Fail()
 	}
-	re := r.(Response)
-	if int(re.Code) != 0 {
+	if int(r.Code) != 0 {
 		t.Fail()
 	}
-	objectId = re.ObjectId
+	objectId = r.ObjectId
 }
 
 func Test_GetClasses(t *testing.T) {
@@ -33,8 +32,7 @@ func Test_GetClasses(t *testing.T) {
 		fmt.Print(err)
 		t.Fail()
 	}
-	re := r.(Response)
-	if int(re.Code) != 0 {
+	if int(r.Code) != 0 {
 		t.Fail()
 	}
 }
@@ -45,20 +43,29 @@ func Test_PutClasses(t *testing.T) {
 		fmt.Println(err)
 		t.Fail()
 	}
-	re := r.(Response)
-	if int(re.Code) != 0 {
+	if int(r.Code) != 0 {
 		t.Fail()
 	}
 }
 
 func Test_DeleteClasses(t *testing.T) {
-	r, err := lean.DeleteClass("test", objectId, `{"clicks": 0}`)
+	r, err := lean.DeleteClass("test", objectId, nil)
 	if err != nil {
 		fmt.Println(err)
 		t.Fail()
 	}
-	re := r.(Response)
-	if int(re.Code) != 0 {
+	if int(r.Code) != 0 {
 		t.Fail()
 	}
+}
+
+func Test_SearchClasses(t *testing.T) {
+	params := url.Values{}
+	params.Add("limit", "1000")
+	r, err := lean.SearchClass("test", params)
+	if err != nil {
+		fmt.Println(err)
+		t.Fail()
+	}
+	fmt.Printf("%+v", r)
 }

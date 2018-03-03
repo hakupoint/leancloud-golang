@@ -23,6 +23,9 @@ type Response struct {
 	PubUser      string    `json:"pubUser"`
 	PubTimestamp float64   `json:"pubTimestamp"`
 }
+type ScanResponse struct {
+	Results []Response `json:"results"`
+}
 
 func (l *LeanCloud) put(module string, data interface{}) *http.Request {
 	r := l.createRequest(http.MethodPut, module, data)
@@ -44,8 +47,26 @@ func (l *LeanCloud) delete(module string, data interface{}) *http.Request {
 	return r
 }
 
-func fetch(r *http.Request, l *LeanCloud) (interface{}, error) {
+func fetch(r *http.Request, l *LeanCloud) (Response, error) {
 	var respdata Response
+	resp, err := fetchDo(r, respdata)
+	if err != nil {
+		return respdata, err
+	}
+	json.Unmarshal(resp, &respdata)
+	return respdata, nil
+}
+
+func fetchList(r *http.Request, l *LeanCloud) (ScanResponse, error) {
+	var respList ScanResponse
+	resp, err := fetchDo(r, respList)
+	if err != nil {
+		return respList, err
+	}
+	json.Unmarshal(resp, &respList)
+	return respList, nil
+}
+func fetchDo(r *http.Request, inter interface{}) ([]byte, error) {
 	client := &http.Client{}
 	resp, err := client.Do(r)
 	defer resp.Body.Close()
@@ -53,11 +74,7 @@ func fetch(r *http.Request, l *LeanCloud) (interface{}, error) {
 		return nil, err
 	}
 	b, _ := ioutil.ReadAll(resp.Body)
-	err = json.Unmarshal(b, &respdata)
-	if err != nil {
-		return nil, err
-	}
-	return respdata, nil
+	return b, nil
 }
 
 func (l *LeanCloud) createRequest(method, module string, arg interface{}) *http.Request {
