@@ -39,9 +39,6 @@ func NewLeanCould(id, key, masterKey string) *LeanCloud {
 		sign_mode: SIGN_APP_KEY,
 		Master:    masterKey,
 	}
-	defer func() {
-		lean.sign()
-	}()
 	return lean
 }
 
@@ -49,7 +46,6 @@ func NewLeanCould(id, key, masterKey string) *LeanCloud {
 // master SIGN_MASTER_KEY
 func (l *LeanCloud) SetSign(flag int) {
 	l.sign_mode = flag
-	l.sign()
 }
 
 func (l *LeanCloud) sign() {
